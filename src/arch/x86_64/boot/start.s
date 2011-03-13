@@ -1,3 +1,5 @@
+    .extern kmain
+
     .section .data
 
     .align 16
@@ -38,6 +40,15 @@ pd:
     .space 0x1000
 kernel_pagetable_end:
 
+    .global kernel_stack
+kernel_stack:
+    .space 0x1000
+kernel_stack_end:
+
+multiboot_magic:
+    .space 8
+multiboot_info:
+    .space 8
 
     .section .text
     .code32
@@ -46,6 +57,10 @@ kernel_pagetable_end:
 
 start:
     cli
+
+# store multiboot parameters
+    mov %eax, multiboot_magic
+    mov %ebx, multiboot_info
 
 # create pagetable for identity mapping lower 2 megabytes
 # zerofill kernel_pagetable
@@ -104,9 +119,17 @@ longmode_start:
     mov $null_segment, %bx
     mov %bx, %ss
 
-# print a number on the screen
-    movw $0x0737, 0xb8000
+# set up kernel stack
+    mov $kernel_stack_end, %rsp
+    push $0     # debugger backtrace stops here
 
+# call kmain
+    mov multiboot_magic, %rdi
+    mov multiboot_info, %rsi
+    call kmain
+
+# hang the computer
+    cli
 hang:
     hlt
     jmp hang

@@ -6,6 +6,8 @@ set(CMAKE_ASM-ATT-COMPILER as)
 
 include(CMakeForceCompiler)
 cmake_force_c_compiler(${CMAKE_TOOLCHAIN_PREFIX}-gcc GNU)
+set(CMAKE_C_FLAGS "-std=c99 -m64 -mcmodel=large -mno-red-zone -nostdlib -nostartfiles -nodefaultlibs -ffreestanding -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow")
+set(CMAKE_C_FLAGS_DEBUG "-ggdb -W -Wall -Wextra -Winline")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/toolchain/linker.ld)
 set(CMAKE_EXE_LINKER_FLAGS "-N -T${LINKER_SCRIPT}")
