@@ -1,6 +1,8 @@
 add_executable(${CMAKE_PROJECT_NAME}
     arch/x86_64/boot/multiboot.s
     arch/x86_64/boot/start.s
+    arch/x86_64/isr.s
+    arch/x86_64/interrupt.c
     kernel/main.c
     )
 
