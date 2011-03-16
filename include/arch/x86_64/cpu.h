@@ -1,7 +1,8 @@
 #ifndef X86_64_CPU_H
 #define X86_64_CPU_H
 
-#include <types.h>
+#include <stdint.h>
+
 #include <arch/cpu.h>
 
 typedef uint16_t segment_selector_t;

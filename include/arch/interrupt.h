@@ -1,8 +1,10 @@
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #include <config.h>
-#include <types.h>
 #include <arch/cpu.h>
 
 typedef uint8_t interrupt_vector_t;

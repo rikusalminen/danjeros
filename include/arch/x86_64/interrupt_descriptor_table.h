@@ -1,7 +1,9 @@
 #ifndef X86_86_INTERRUPT_DESCRIPTOR_TABLE_H
 #define X86_86_INTERRUPT_DESCRIPTOR_TABLE_H
 
-#include <types.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 #include <arch/x86_64/cpu.h>
 
 typedef enum interrupt_type_t

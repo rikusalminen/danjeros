@@ -1,7 +1,8 @@
 #ifndef X86_64_INTERRUPT_H
 #define X86_64_INTERRUPT_H
 
-#include <types.h>
+#include <stdint.h>
+
 #include <arch/interrupt.h>
 
 #define INT_DIVIDE_ERROR    ((interrupt_vector_t)0x0)

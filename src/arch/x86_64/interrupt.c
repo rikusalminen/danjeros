@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <stddef.h>
+
 #include <arch/x86_64/interrupt.h>
 #include <arch/x86_64/interrupt_descriptor_table.h>
 

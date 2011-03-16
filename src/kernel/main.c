@@ -1,4 +1,5 @@
-#include <types.h>
+#include <stdint.h>
+
 #include <arch/interrupt.h>
 
 void interrupt_handler(
