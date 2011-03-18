@@ -26,6 +26,7 @@ typedef struct registers_t
 typedef uint64_t rflags_t;
 
 #define RFLAGS_CARRY        ((rflags_t) 1 << 0)
+#define RFLAGS_NO_FLAGS     ((rflags_t) 1 << 1) // must always be set
 #define RFLAGS_PARITY       ((rflags_t) 1 << 2)
 #define RFLAGS_ADJUST       ((rflags_t) 1 << 4)
 #define RFLAGS_ZERO         ((rflags_t) 1 << 6)

@@ -3,6 +3,7 @@ add_executable(${CMAKE_PROJECT_NAME}
     arch/x86_64/boot/start.s
     arch/x86_64/isr.s
     arch/x86_64/interrupt.c
+    arch/x86_64/thread.c
     arch/x86/pic.c
     kernel/main.c
     )
