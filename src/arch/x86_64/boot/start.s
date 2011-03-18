@@ -46,9 +46,9 @@ kernel_stack:
 kernel_stack_end:
 
 multiboot_magic:
-    .space 8
+    .space 4
 multiboot_info:
-    .space 8
+    .space 4
 
     .section .text
     .code32
@@ -124,8 +124,8 @@ longmode_start:
     push $0     # debugger backtrace stops here
 
 # call kmain
-    mov multiboot_magic, %rdi
-    mov multiboot_info, %rsi
+    mov multiboot_magic, %edi
+    mov multiboot_info, %esi
     call kmain
 
 # hang the computer
