@@ -53,4 +53,9 @@ static inline rflags_t rflags_read()
     return rflags;
 }
 
+static inline void cpu_pause()
+{
+    __asm__ __volatile__ ("pause");
+}
+
 #endif
