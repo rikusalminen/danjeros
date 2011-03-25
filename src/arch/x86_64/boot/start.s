@@ -26,6 +26,10 @@ global_descriptor_table_end:
     .global data_segment
     .set data_segment, (data_descriptor - global_descriptor_table)
 
+multiboot_magic:
+    .space 4
+multiboot_info:
+    .space 4
 
     .section .bss
 
@@ -45,11 +49,6 @@ kernel_stack:
     .space 0x1000
 kernel_stack_end:
 
-multiboot_magic:
-    .space 4
-multiboot_info:
-    .space 4
-
     .section .text
     .code32
 
@@ -58,18 +57,19 @@ multiboot_info:
 start:
     cli
 
-# store multiboot parameters
+# store multiboot parameters in .data
     mov %eax, multiboot_magic
     mov %ebx, multiboot_info
 
-# create pagetable for identity mapping lower 2 megabytes
-# zerofill kernel_pagetable
+# zerofill .bss
     cld
-    mov $kernel_pagetable, %edi
-    mov $(kernel_pagetable_end - kernel_pagetable), %ecx
+    mov $bss, %edi
+    mov $bss_end, %ecx
+    sub %edi, %ecx
     xor %eax, %eax
     rep stosb
 
+# create pagetable for identity mapping lower 2 megabytes
 # make minimal page table entries
     .set pml4_entry, (pdpt + 0x03)
     .set pdpt_entry, (pd + 0x03)
