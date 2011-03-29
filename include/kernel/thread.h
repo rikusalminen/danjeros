@@ -21,4 +21,7 @@ thread_t *thread_init(
     uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e, uint64_t f
     );
 
+bool thread_context_save(registers_t *registers, interrupt_stack_frame_t *interrupt_stack_frame);
+void thread_context_restore(const registers_t *registers, const interrupt_stack_frame_t *interrupt_stack_frame);
+
 #endif
