@@ -26,6 +26,9 @@ static inline void puthex(int x, int y, uint64_t val)
         *(screen+i) = 0x0700 | hexchar((val << (4*i)) >> 60);
 }
 
+thread_t *current_thread;
+threadq_t thread_queue;
+
 static void interrupt_callback(
     registers_t *registers,
     interrupt_stack_frame_t *interrupt_stack_frame,
@@ -33,11 +36,35 @@ static void interrupt_callback(
 {
     (void)a; (void)b; (void)c; (void)d; (void)e;
 
-    for(size_t i = 0; i < (sizeof(registers_t)/sizeof(uint64_t)); ++i)
-        puthex(0, i, ((const uint64_t*)registers)[i]);
-    for(size_t i = 0; i < (sizeof(interrupt_stack_frame_t)/sizeof(uint64_t)); ++i)
-        puthex(20, i, ((const uint64_t*)interrupt_stack_frame)[i]);
+    current_thread->registers = *registers;
+    current_thread->interrupt_stack_frame = *interrupt_stack_frame;
+
+    threadq_enqueue(&thread_queue, &current_thread->queue_node);
+    current_thread = threadq_dequeue(&thread_queue)->thread;
+
+    *registers = current_thread->registers;
+    *interrupt_stack_frame = current_thread->interrupt_stack_frame;
 }
+
+static void yield()
+{
+    interrupt_rpc(interrupt_callback, 42, 43, 44, 45, 46);
+}
+
+void task(uint64_t initial, uint64_t increment, uint64_t x, uint64_t y, uint64_t e, uint64_t f)
+{
+    (void)e; (void)f;
+    uint64_t counter = initial;
+    while(true)
+    {
+        puthex(x, y, counter += increment);
+        yield();
+    }
+}
+
+thread_t main_thread;
+thread_t other_thread;
+uint8_t thread_stack[1024];
 
 void kmain(uint64_t magic, uint64_t ptr)
 {
@@ -52,5 +79,12 @@ void kmain(uint64_t magic, uint64_t ptr)
     pic_remap(INT_IRQ0, INT_IRQ7);
     pic_irq_mask(0xffff);
 
-    interrupt_rpc(interrupt_callback, 42, 43, 44, 45, 46);
+    thread_init(&main_thread, NULL, NULL, 0, 0, 0, 0, 0, 0);
+    thread_init(&other_thread, task, thread_stack + sizeof(thread_stack), 1ul << 63, 2, 5, 16, 0, 0);
+
+    current_thread = &main_thread;
+    threadq_init(&thread_queue);
+    threadq_enqueue(&thread_queue, &other_thread.queue_node);
+
+    task(0, 1, 5, 15, 0, 0);
 }
