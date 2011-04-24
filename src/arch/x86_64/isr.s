@@ -3,6 +3,13 @@
     .section .text
     .code64
 
+    .global INTERRUPT_RPC_VECTOR
+    .set INTERRUPT_RPC_VECTOR, 63
+    .global interrupt_rpc
+interrupt_rpc:
+    int $INTERRUPT_RPC_VECTOR
+    ret
+
 isr_stub:
 # save general purpose registers
     push %rax
