@@ -5,6 +5,8 @@
 #include <arch/x86_64/interrupt_descriptor_table.h>
 #include <arch/x86/pic.h>
 
+#include <kernel/scheduler.h>
+
 extern interrupt_descriptor_t interrupt_descriptor_table[];
 
 extern const int INTERRUPT_MAX;
@@ -55,6 +57,11 @@ void interrupt_handler(
         interrupt_rpc_t rpc = (interrupt_rpc_t)(void*)registers->rdi;
         rpc(registers, interrupt_stack_frame,
             registers->rsi, registers->rdx, registers->rcx, registers->r8, registers->r9);
+    }
+
+    if(vector == INT_IRQ0) // timer interrupt
+    {
+        scheduler_yield_interrupt(registers, interrupt_stack_frame, true);
     }
 
     // send end-of-interrupt (EOI) to PIC

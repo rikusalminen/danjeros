@@ -34,7 +34,6 @@ void task(uint64_t initial, uint64_t increment, uint64_t x, uint64_t y, uint64_t
     while(true)
     {
         puthex(x, y, counter += increment);
-        scheduler_yield(true);
     }
 }
 
@@ -52,12 +51,14 @@ void kmain(uint64_t magic, uint64_t ptr)
     interrupt_init();
 
     pic_remap(INT_IRQ0, INT_IRQ7);
-    pic_irq_mask(0xffff);
+    pic_irq_mask(0xfffe); // unmask timer interrupt (irq 0)
 
     thread_init(&other_thread, task, thread_stack + sizeof(thread_stack), 1ul << 63, 2, 5, 16, 0, 0);
 
     scheduler_init();
     scheduler_add_ready(&other_thread);
 
+    interrupt_enable();
     task(0, 1, 5, 15, 0, 0);
+    interrupt_disable();
 }
