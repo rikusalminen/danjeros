@@ -46,7 +46,26 @@ void scheduler_init()
 void scheduler_yield(bool ready)
 {
     interrupt_state_t interrupt_state = interrupt_disable();
-    interrupt_rpc((interrupt_rpc_t)scheduler_yield_interrupt, (uint64_t)ready, 0, 0, 0, 0);
+
+    thread_t* prev_thread = scheduler_cpu.current_thread;
+    if(thread_context_save(&prev_thread->registers, &prev_thread->interrupt_stack_frame))
+    {
+        spinlock_lock(&scheduler.spinlock);
+
+        if(ready)
+            threadq_enqueue(&scheduler.queue, &scheduler_cpu.current_thread->queue_node);
+
+        threadq_node_t *next_node = threadq_dequeue(&scheduler.queue);
+
+        spinlock_unlock(&scheduler.spinlock);
+
+        thread_t *next_thread = next_node != NULL ? next_node->thread : &scheduler_cpu.idle_thread;
+        scheduler_cpu.current_thread = next_thread;
+
+        if(prev_thread != next_thread)
+            thread_context_restore(&next_thread->registers, &next_thread->interrupt_stack_frame);
+    }
+
     interrupt_state_restore(interrupt_state);
 }
 
