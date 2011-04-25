@@ -58,7 +58,8 @@ void scheduler_yield_interrupt(registers_t *registers, interrupt_stack_frame_t *
 
     spinlock_lock(&scheduler.spinlock);
 
-    if(ready) threadq_enqueue(&scheduler.queue, &prev_thread->queue_node);
+    if(ready && prev_thread != &scheduler_cpu.idle_thread)
+        threadq_enqueue(&scheduler.queue, &prev_thread->queue_node);
     threadq_node_t *next_node = threadq_dequeue(&scheduler.queue);
 
     spinlock_unlock(&scheduler.spinlock);
