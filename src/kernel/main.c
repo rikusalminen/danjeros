@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #include <arch/interrupt.h>
+#include <arch/pagetable.h>
 #include <kernel/thread_queue.h>
 #include <kernel/thread.h>
 #include <kernel/spinlock.h>
