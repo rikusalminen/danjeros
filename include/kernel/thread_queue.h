@@ -28,6 +28,8 @@ typedef struct threadq_t
     threadq_node_t *first, *last;
 } threadq_t;
 
+#define THREADQ_INIT { .first = NULL, .last = NULL }
+
 static inline threadq_t* threadq_init(threadq_t *queue)
 {
     queue->first = queue->last = NULL;

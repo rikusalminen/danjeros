@@ -99,3 +99,8 @@ void scheduler_add_queue(threadq_t *queue)
     spinlock_unlock(&scheduler.spinlock);
     interrupt_state_restore(interrupt_state);
 }
+
+thread_t* scheduler_current_thread()
+{
+    return scheduler_cpu.current_thread;
+}
