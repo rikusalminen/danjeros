@@ -6,6 +6,7 @@ add_executable(${CMAKE_PROJECT_NAME}
     arch/x86_64/thread.c
     arch/x86/kernel_panic.c
     arch/x86/pic.c
+    arch/x86/mp_configuration.c
     kernel/scheduler.c
     kernel/main.c
     )

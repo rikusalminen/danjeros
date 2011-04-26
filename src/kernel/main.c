@@ -7,6 +7,7 @@
 #include <kernel/scheduler.h>
 
 #include <arch/x86/pic.h>
+#include <arch/x86/mp_configuration.h>
 
 static void puts(const char *str)
 {
