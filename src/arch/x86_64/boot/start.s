@@ -5,8 +5,8 @@
     .align 16
 gdtr:
 gdtr_limit:
-    .word (global_descriptor_table_end - global_descriptor_table_end) - 1
-gdrt_pointer:
+    .word (global_descriptor_table_end - global_descriptor_table) - 1
+gdtr_pointer:
     .int global_descriptor_table
 
     .global global_descriptor_table
