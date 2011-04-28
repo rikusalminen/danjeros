@@ -5,6 +5,7 @@
 
 #include <arch/cpu.h>
 
+typedef uint64_t physical_addr_t;
 typedef uint16_t segment_selector_t;
 
 typedef enum cpu_privilege_t
