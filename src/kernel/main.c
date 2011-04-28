@@ -44,7 +44,7 @@ void kmain(uint64_t magic, uint64_t ptr)
 {
     (void)ptr;
     const uint64_t multiboot_magic_number = 0x2badb002;
-    if(magic != multiboot_magic_number) return;
+    assert(magic == multiboot_magic_number);
 
     puts("the kernel is alive");
 

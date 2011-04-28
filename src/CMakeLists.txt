@@ -4,6 +4,7 @@ add_executable(${CMAKE_PROJECT_NAME}
     arch/x86_64/isr.s
     arch/x86_64/interrupt.c
     arch/x86_64/thread.c
+    arch/x86/kernel_panic.c
     arch/x86/pic.c
     kernel/scheduler.c
     kernel/main.c
