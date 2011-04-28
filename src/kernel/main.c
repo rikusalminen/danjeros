@@ -7,6 +7,7 @@
 #include <kernel/scheduler.h>
 
 #include <arch/x86/pic.h>
+#include <arch/x86/boot/multiboot.h>
 
 static void puts(const char *str)
 {
@@ -43,8 +44,7 @@ uint8_t thread_stack[1024];
 void kmain(uint64_t magic, uint64_t ptr)
 {
     (void)ptr;
-    const uint64_t multiboot_magic_number = 0x2badb002;
-    assert(magic == multiboot_magic_number);
+    assert(magic == MULTIBOOT_BOOTLOADER_MAGIC);
 
     puts("the kernel is alive");
 
