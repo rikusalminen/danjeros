@@ -39,6 +39,26 @@ void interrupt_init()
 
 extern const int INTERRUPT_RPC_VECTOR;
 
+static inline uint64_t hexchar(uint64_t val)
+{
+    return (val < 10) ? (val + '0') : (val - 10 + 'A');
+}
+
+static inline void puthex(int x, int y, uint64_t val)
+{
+    volatile uint16_t* screen = ((uint16_t*)0xb8000) + y * 80 + x;
+    for(size_t i = 0; i < 16; ++i)
+        *(screen+i) = 0x0700 | hexchar((val << (4*i)) >> 60);
+}
+static inline uint64_t cr2_read()
+{
+    uint64_t ret;
+    __asm__ volatile(
+        "mov %%cr2, %0"
+        : "=r"(ret) );
+    return ret;
+}
+
 void interrupt_handler(
     interrupt_vector_t vector,
     uint64_t error_code,
@@ -50,6 +70,12 @@ void interrupt_handler(
     (void)error_code;
     (void)registers;
     (void)interrupt_stack_frame;
+
+    if(vector == INT_PAGE_FAULT)
+    {
+        puthex(0, 1, cr2_read());
+        puthex(0, 2, error_code);
+    }
 
     uint64_t rpc_vector = (uint64_t)&INTERRUPT_RPC_VECTOR;
     if(vector == rpc_vector)
